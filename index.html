@@ -17,8 +17,8 @@
       flex-direction: column;
     }
     .header-image {
-      width: 30%;
-      max-width: 300px;
+      width: 80%;
+      max-width: 600px;
       margin-bottom: 20px;
     }
     .terminal-container {
@@ -35,7 +35,6 @@
       padding: 10px;
       margin-bottom: 20px;
       text-align: left;
-      white-space: pre-wrap;
     }
     .input-group {
       margin-bottom: 10px;
@@ -74,9 +73,6 @@
       display: inline-block;
       margin-top: 10px;
     }
-    .info { color: #00FF00; }
-    .success { color: #00FF00; font-weight: bold; }
-    .error { color: #FF0000; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -103,7 +99,7 @@
       <p>Access Granted. You have successfully entered the Anonymous Server.</p>
       <p>Executing confidential script...</p>
       <div id="commandOutput" class="fake-terminal"></div>
-      <a id="downloadLink" class="download-link" href="#" download="AnonymousServerAccess.txt">Download Access Log</a>
+      <a id="downloadLink" class="download-link hidden" href="#" download="AnonymousServerAccess.txt">Download Access Log</a>
     </div>
   </div>
   <script>
@@ -111,15 +107,40 @@
     const submitBtn = document.getElementById("submitBtn");
     const logDiv = document.getElementById("log");
     const unlockedScriptDiv = document.getElementById("unlockedScript");
+    const download = document.getElementById("downloadLink");
     const commandOutput = document.getElementById("commandOutput");
     const downloadLink = document.getElementById("downloadLink");
-
-    function appendToLog(message, type="info") {
+    function appendToLog(message) {
       const para = document.createElement("p");
       para.textContent = message;
-      para.classList.add(type);
       logDiv.appendChild(para);
       logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    const commands = [
+      "> [INFO] Attempting login",
+      "> [INFO] Verifying credentials...",
+      "> [SUCCESS] Secret phrase accepted. Unlocking secure script...",
+      "> [INFO] Decrypting blockchain ledger...",
+      "> [INFO] Generating cryptographic keys...",
+      "> [INFO] Establishing connection to deep web nodes...",
+      "> [SUCCESS] Access granted.",
+      "> [INFO] Analyzing darknet transactions...",
+      "> [INFO] Fetching classified intelligence data...",
+      "> [INFO] Simulating quantum encryption bypass..."
+    ];
+
+    function displayCommands(index) {
+      if (index < commands.length) {
+        setTimeout(() => {
+          const command = document.createElement("p");
+          command.textContent = commands[index];
+          commandOutput.appendChild(command);
+          commandOutput.scrollTop = commandOutput.scrollHeight;
+          displayCommands(index + 1); // Recursive call for the next command
+          if (i = commands.length - 1) {unlockedScriptDiv.classList.remove("hidden");}
+        }, 2000);
+      }
     }
 
     function createDownloadFile() {
@@ -145,19 +166,16 @@
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
       const secret = document.getElementById("secret").value.trim();
-      appendToLog(`[INFO] Attempting login with email: ${email}`, "info");
-      appendToLog("[INFO] Verifying credentials...", "info");
-      setTimeout(() => {
-        if (secret === REQUIRED_SECRET) {
-          appendToLog("[SUCCESS] Secret phrase accepted. Unlocking secure script...", "success");
-          unlockedScriptDiv.classList.remove("hidden");
-          appendToLog("[INFO] Initializing secure channel...", "info");
-          appendToLog("[INFO] Connection established. Running background checks...", "info");
-          appendToLog("[SUCCESS] Access granted.", "success");
-        } else {
-          appendToLog("[ERROR] Incorrect secret phrase. Access denied.", "error");
-        }
-      }, 2000);
+      appendToLog(`Attempting login with email: ${email}`);
+      if (secret === REQUIRED_SECRET) {
+        appendToLog("Secret phrase accepted. Unlocking secure script...");
+        unlockedScriptDiv.classList.remove("hidden");
+        createDownloadFile();
+        displayCommands(0); // Start the sequence
+        appendToLog("[SUCCESS] You have successfully entered the Anonymous Server.");
+      } else {
+        appendToLog("[ERROR] Incorrect secret phrase. Access denied.");
+      }
     });
   </script>
 </body>
