@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Anonymous Terminal Server</title>
+  <style>
+    body {
+      background-color: black;
+      color: #00FF00;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .header-image {
+      width: 80%;
+      max-width: 600px;
+      margin-bottom: 20px;
+    }
+    .terminal-container {
+      width: 80%;
+      max-width: 600px;
+      border: 2px solid #00FF00;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .log {
+      height: 200px;
+      overflow-y: auto;
+      border: 1px solid #00FF00;
+      padding: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .input-group {
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #00FF00;
+      background-color: black;
+      color: #00FF00;
+      font-family: 'Courier New', Courier, monospace;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: black;
+      color: #00FF00;
+      border: 1px solid #00FF00;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #001100;
+    }
+    .hidden {
+      display: none;
+    }
+    a.download-link {
+      color: #00FF00;
+      text-decoration: none;
+      border: 1px solid #00FF00;
+      padding: 5px 10px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <img src="anon.png" alt="Anonymous Header" class="header-image">
+  <div class="terminal-container">
+    <div id="log" class="log">
+      <p>Welcome to the Anonymous Terminal Server</p>
+      <p>Please enter your credentials below.</p>
+    </div>
+    <div class="input-group">
+      <label for="email">Email:</label>
+      <input type="text" id="email" placeholder="Enter your email">
+    </div>
+    <div class="input-group">
+      <label for="password">Password:</label>
+      <input type="password" id="password" placeholder="Enter your password">
+    </div>
+    <div class="input-group">
+      <label for="secret">Secret Phrase:</label>
+      <input type="text" id="secret" placeholder="Enter secret phrase">
+    </div>
+    <button id="submitBtn">Submit</button>
+    <div id="unlockedScript" class="hidden">
+      <p>Access Granted. You have successfully entered the Anonymous Server.</p>
+      <p>Executing confidential script...</p>
+      <a id="downloadLink" class="download-link" href="#" download="AnonymousServerAccess.txt">Download Access Log</a>
+    </div>
+  </div>
+  <script>
+    const REQUIRED_SECRET = "We have eyes on you";
+    const submitBtn = document.getElementById("submitBtn");
+    const logDiv = document.getElementById("log");
+    const unlockedScriptDiv = document.getElementById("unlockedScript");
+    const downloadLink = document.getElementById("downloadLink");
+    function appendToLog(message) {
+      const para = document.createElement("p");
+      para.textContent = message;
+      logDiv.appendChild(para);
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+    function createDownloadFile() {
+      const textContent = "Access Granted: You have successfully logged into the Anonymous Server.";
+      const blob = new Blob([textContent], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      downloadLink.href = url;
+    }
+    submitBtn.addEventListener("click", () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const secret = document.getElementById("secret").value.trim();
+      appendToLog(`Attempting login with email: ${email}`);
+      if (secret === REQUIRED_SECRET) {
+        appendToLog("Secret phrase accepted. Unlocking secure script...");
+        unlockedScriptDiv.classList.remove("hidden");
+        createDownloadFile();
+        appendToLog("You have successfully entered the Anonymous Server.");
+      } else {
+        appendToLog("Incorrect secret phrase. Access denied.");
+      }
+    });
+  </script>
+</body>
+</html>
