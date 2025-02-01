@@ -166,7 +166,7 @@
       const password = document.getElementById("password").value;
       const secret = document.getElementById("secret").value.trim();
       appendToLog(`Attempting login with email: ${email}`);
-      if (secret === REQUIRED_SECRET) {
+      if (secret === REQUIRED_SECRET.toLocaleLowerCase()) {
         appendToLog("Secret phrase accepted. Unlocking secure script...");
         unlockedScriptDiv.classList.remove("hidden");
         createDownloadFile();
