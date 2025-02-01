@@ -73,6 +73,15 @@
       display: inline-block;
       margin-top: 10px;
     }
+    .log-success {
+      color: #00FFFF; /* Electric blue */
+    }
+    .log-info {
+      color: #FFFF00; /* Yellow */
+    }
+    .log-error {
+      color: #FF0000; /* Red */
+    }
   </style>
 </head>
 <body>
@@ -130,15 +139,42 @@
       "> [SUCCESS] SEQUENCE COMPLETED."
     ];
 
+    function appendToLog(message) {
+      const para = document.createElement("p");
+      para.textContent = message;
+      
+      // Add appropriate color class
+      if (message.includes("[SUCCESS]")) {
+        para.className = "log-success";
+      } else if (message.includes("[INFO]")) {
+        para.className = "log-info";
+      } else if (message.includes("[ERROR]")) {
+        para.className = "log-error";
+      }
+      
+      logDiv.appendChild(para);
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
     function displayCommands(index) {
       if (index < commands.length) {
         setTimeout(() => {
           const command = document.createElement("p");
           command.textContent = commands[index];
+          
+          // Add appropriate color class
+          if (commands[index].includes("[SUCCESS]")) {
+            command.className = "log-success";
+          } else if (commands[index].includes("[INFO]")) {
+            command.className = "log-info";
+          }
+          
           commandOutput.appendChild(command);
           commandOutput.scrollTop = commandOutput.scrollHeight;
-          displayCommands(index + 1); // Recursive call for the next command
-          if (i = commands.length - 1) {unlockedScriptDiv.classList.remove("hidden");}
+          displayCommands(index + 1);
+          if (index === commands.length - 1) {
+            unlockedScriptDiv.classList.remove("hidden");
+          }
         }, 2000);
       }
     }
@@ -167,7 +203,7 @@
       const password = document.getElementById("password").value;
       const secret = document.getElementById("secret").value.trim();
       appendToLog(`Attempting login with email: ${email}`);
-      if (secret === REQUIRED_SECRET.toLocaleLowerCase()) {
+      if (secret.toLocaleLowerCase() === REQUIRED_SECRET.toLocaleLowerCase()) {
         appendToLog("Secret phrase accepted. Unlocking secure script...");
         unlockedScriptDiv.classList.remove("hidden");
         createDownloadFile();
