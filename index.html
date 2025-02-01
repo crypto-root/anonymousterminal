@@ -74,6 +74,9 @@
       display: inline-block;
       margin-top: 10px;
     }
+    .info { color: #00FF00; }
+    .success { color: #00FF00; font-weight: bold; }
+    .error { color: #FF0000; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -110,12 +113,15 @@
     const unlockedScriptDiv = document.getElementById("unlockedScript");
     const commandOutput = document.getElementById("commandOutput");
     const downloadLink = document.getElementById("downloadLink");
-    function appendToLog(message) {
+
+    function appendToLog(message, type="info") {
       const para = document.createElement("p");
       para.textContent = message;
+      para.classList.add(type);
       logDiv.appendChild(para);
       logDiv.scrollTop = logDiv.scrollHeight;
     }
+
     function createDownloadFile() {
       const textContent = `
       Welcome to Anonymous.
@@ -139,15 +145,19 @@
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
       const secret = document.getElementById("secret").value.trim();
-      appendToLog(`[INFO] Attempting login with email: ${email}`);
-      if (secret === REQUIRED_SECRET) {
-        appendToLog("[SUCCESS] Secret phrase accepted. Unlocking secure script...");
-        unlockedScriptDiv.classList.remove("hidden");
-        createDownloadFile();
-        appendToLog("[INFO] You have successfully entered the Anonymous Server.");
-      } else {
-        appendToLog("[ERROR] Incorrect secret phrase. Access denied.");
-      }
+      appendToLog(`[INFO] Attempting login with email: ${email}`, "info");
+      appendToLog("[INFO] Verifying credentials...", "info");
+      setTimeout(() => {
+        if (secret === REQUIRED_SECRET) {
+          appendToLog("[SUCCESS] Secret phrase accepted. Unlocking secure script...", "success");
+          unlockedScriptDiv.classList.remove("hidden");
+          appendToLog("[INFO] Initializing secure channel...", "info");
+          appendToLog("[INFO] Connection established. Running background checks...", "info");
+          appendToLog("[SUCCESS] Access granted.", "success");
+        } else {
+          appendToLog("[ERROR] Incorrect secret phrase. Access denied.", "error");
+        }
+      }, 2000);
     });
   </script>
 </body>
